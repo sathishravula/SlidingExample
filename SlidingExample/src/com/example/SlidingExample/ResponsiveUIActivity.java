@@ -1,11 +1,14 @@
 package com.example.SlidingExample;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -17,102 +20,120 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
  * On tablets, it will will do the same general thing. In portrait
  * mode, it will enable the SlidingMenu, and in landscape mode, it
  * will be a dual pane layout.
- * 
- * @author jeremy
  *
+ * @author jeremy
  */
 public class ResponsiveUIActivity extends SlidingFragmentActivity {
 
-	private Fragment mContent;
+    private Fragment mContent;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setTitle(R.string.responsive_ui);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle("London");
 
-		setContentView(R.layout.responsive_content_frame);
+        setContentView(R.layout.responsive_content_frame);
 
-		// check if the content frame contains the menu frame
-		if (findViewById(R.id.menu_frame) == null) {
-			setBehindContentView(R.layout.menu_frame);
-			getSlidingMenu().setSlidingEnabled(true);
-			getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-			// show home as up so we can toggle
+        // check if the content frame contains the menu frame
+        if (findViewById(R.id.menu_frame) == null) {
+            setBehindContentView(R.layout.menu_frame);
+            getSlidingMenu().setSlidingEnabled(true);
+            getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+            // show home as up so we can toggle
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		} else {
-			// add a dummy view
-			View v = new View(this);
-			setBehindContentView(v);
-			getSlidingMenu().setSlidingEnabled(false);
-			getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-		}
+        } else {
+            // add a dummy view
+            View v = new View(this);
+            setBehindContentView(v);
+            getSlidingMenu().setSlidingEnabled(false);
+            getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        }
 
-		// set the Above View Fragment
-		if (savedInstanceState != null)
-			mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
-		if (mContent == null)
-			mContent = new BirdGridFragment(0);	
-		getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.content_frame, mContent)
-		.commit();
+        // set the Above View Fragment
+        if (savedInstanceState != null)
+            mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+        if (mContent == null)
+            mContent = new BirdGridFragment(0);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, mContent)
+                .commit();
 
-		// set the Behind View Fragment
-		getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.menu_frame, new BirdMenuFragment())
-		.commit();
+        // set the Behind View Fragment
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.menu_frame, new BirdMenuFragment())
+                .commit();
 
-		// customize the SlidingMenu
-		SlidingMenu sm = getSlidingMenu();
-		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		sm.setShadowWidthRes(R.dimen.shadow_width);
-		sm.setShadowDrawable(R.drawable.shadow);
-		sm.setBehindScrollScale(0.25f);
-		sm.setFadeDegree(0.25f);
+        // customize the SlidingMenu
+        SlidingMenu sm = getSlidingMenu();
+        sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        sm.setShadowWidthRes(R.dimen.shadow_width);
+        sm.setShadowDrawable(R.drawable.shadow);
+        sm.setBehindScrollScale(0.25f);
+        sm.setFadeDegree(0.25f);
 
-		// show the explanation dialog
-	/*	if (savedInstanceState == null)
+        // show the explanation dialog
+    /*	if (savedInstanceState == null)
 			new AlertDialog.Builder(this)
 			.setTitle(R.string.what_is_this)
 			.setMessage(R.string.responsive_explanation)
 			.show();*/
-	}
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			toggle();
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                toggle();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		getSupportFragmentManager().putFragment(outState, "mContent", mContent);
-	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "mContent", mContent);
+    }
 
-	public void switchContent(final Fragment fragment) {
-		mContent = fragment;
-		getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.content_frame, fragment)
-		.commit();
-		Handler h = new Handler();
-		h.postDelayed(new Runnable() {
-			public void run() {
-				getSlidingMenu().showContent();
-			}
-		}, 50);
-	}	
+    public void switchContent(final Fragment fragment) {
+        mContent = fragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+            public void run() {
+                getSlidingMenu().showContent();
+            }
+        }, 50);
+    }
 
-	public void onBirdPressed(int pos) {
-		Intent intent = BirdActivity.newInstance(ResponsiveUIActivity.this, pos);
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                SharedPreferences session = getSharedPreferences("session", Context.MODE_MULTI_PROCESS);
+                session.edit().clear().commit();
+                finish();
+                onBackPressed();
+                break;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.logout, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void onBirdPressed(int pos) {
+        Intent intent = BirdActivity.newInstance(ResponsiveUIActivity.this, pos);
 //	Intent intent=new Intent(ResponsiveUIActivity.this,BirdActivity.class);
-			startActivity(intent);
+        startActivity(intent);
 
-	}
+    }
 
 }

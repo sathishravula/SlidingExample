@@ -1,13 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/nokia"
         >
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello World, MyActivity"
-            />
-</LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="16dp"
+                  android:gravity="center"
+                  android:layout_alignParentBottom="true"
+                  android:weightSum="2">
+        <LinearLayout android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:id="@+id/singin"
+                      android:background="@drawable/custom_border"
+                      android:clickable="true"
+                      android:layout_marginRight="8dp"
+                      android:layout_gravity="center"
+                      android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sing In"
+                    android:padding="12dp"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:layout_gravity="center"
+                      android:clickable="true"
+                      android:gravity="center"
+                      android:orientation="vertical"
+                      android:layout_marginLeft="8dp"
+                      android:background="@drawable/custom_border"
+                      android:id="@+id/singup"
+                      android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sing In"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:padding="12dp"
+                    />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
 
